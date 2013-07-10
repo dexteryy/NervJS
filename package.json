@@ -1,6 +1,6 @@
 {
     "name": "CordJS",
-    "description": "",
+    "description": "A tiny, pure, event-based model wrapper for the MVC or MDV (Model-driven Views) pattern",
     "homepage": "https://github.com/dexteryy/CordJS",
     "author": {
         "name": "dexteryy",
@@ -21,12 +21,13 @@
         "ozjs"
     ],
     "main": "cord",
-    "version": "1.0.0",
+    "version": "0.2.0",
     "volo": {
         "dependencies": {
         }
     },
     "dependencies": {
-
+        "mo": "~1.5.2",
+        "eventmaster": "2.1.0"
     }
 }

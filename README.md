@@ -5,36 +5,89 @@ title: CordJS
 
 # CordJS
 
-> * A tiny, pure, event-based model-view-binder (MVB) library which is far more thin than Backbone
-> * Under construction...
+> * A tiny, pure, event-based model wrapper for the MVC or MDV (Model-driven Views) pattern.
+> * It is far thinner than Backbone. None of View, Controller or Router is involved.
+> * Strict data hiding but straightforward way to use.
+> * Provides minimal built-in APIs but supports all external and conventional methods to access the model.
+> * Model can be nested and supports bubbling events.
 
-## AMD and OzJS
+## In NodeJS
+
+```
+npm install cord
+```
+
+## In browser
+
+### AMD and OzJS
 
 * CordJS can either be viewed as an independent library, or as a part of [OzJS mirco-framework](http://ozjs.org/#framework).
 * It's wrapped as an [AMD (Asynchronous Module Definition)](https://github.com/amdjs/amdjs-api/wiki/AMD) module. You should use it with [oz.js](http://ozjs.org/#start) (or require.js or [similar](http://wiki.commonjs.org/wiki/Implementations) for handling dependencies). 
 * If you want to make it available for both other AMD code and traditional code based on global namespace. OzJS provides [a mini define/require implementation](http://ozjs.org/examples/adapter/) to transform AMD module into traditional [module pattern](http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth).
 * See [http://ozjs.org](http://ozjs.org) for details.
 
+### Get the code
+
+* [Download on Github](https://github.com/dexteryy/CordJS/blob/master/cord.js)
+* Add to your project as new dependency:
+    * via [istatic](http://ozjs.org/istatic)
+    * via [volo](https://github.com/volojs/volo)
+
 ## Dependencies
 
-* [mo/lang](https://github.com/dexteryy/mo)
+* [mo/lang/type](https://github.com/dexteryy/mo)
+* [mo/lang/mix](https://github.com/dexteryy/mo)
+* [mo/lang/oop](https://github.com/dexteryy/mo)
 * [EventMaster](https://github.com/dexteryy/EventMaster)
 
 ## Examples
 
-Under construction...
-
-## Get the code
-
-Coming soon...
+* [demo](http://ozjs.org/CordJS/examples/)
 
 ## API and usage
 
-Under construction...
+```javascript 
+var cord = require('cord');
+var papercover = cord();
+var hardcover = cord({
+    isHard: true
+});
+var pageModel = cord.model({
+    defaults: {
+        text: '',
+        number: 0
+    },
+    mark: function(){...}
+});
+var page = pageModel({ number: 1 });
+var page2 = pageModel({ number: 2 });
+```
+
+* `page.get()` -- 
+* `page.get(key)` -- 
+* `page.set(key, function, context)` -- 
+* `page.set(key, value, context)` -- 
+* `page.set(key, model, context)` -- 
+* `page.set(function, context)` -- 
+* `page.set(model, context)` -- 
+* `page.remove(key)` -- 
+* `page.reset()` -- 
+* `page.find(value|model)` -- 
+
+```javascript 
+var book = cord([]);
+var bookB = cord.collection({
+    selectPage: function(number){...}
+});
+```
+
+* `book.add(value|model)` -- 
+* same as above
+
 
 ## More References
 
-See [OzJS References](http://ozjs.org/#ref)
+See [OzJS Project Homepage](http://ozjs.org/)
 
 ## Release History
 
