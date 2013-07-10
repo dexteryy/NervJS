@@ -48,6 +48,11 @@ npm install nerv
 
 ```javascript 
 var nerv = require('nerv');
+```
+
+### nerv.Model
+
+```javascript 
 var papercover = nerv();
 var hardcover = nerv({
     isHard: true
@@ -65,14 +70,26 @@ var page2 = pageModel({ number: 2 });
 
 * `page.get()` -- 
 * `page.get(key)` -- 
-* `page.set(key, function, context)` -- 
+* `page.set(key, function(value){ }, context)` -- 
+* `page.set(key, function(model){ }, context)` -- 
 * `page.set(key, value, context)` -- 
 * `page.set(key, model, context)` -- 
-* `page.set(function, context)` -- 
+* `page.set(function(data){ }, context)` -- 
 * `page.set(model, context)` -- 
 * `page.remove(key)` -- 
 * `page.reset()` -- 
-* `page.find(value|model)` -- 
+* `page.find(value)` -- 
+* `page.find(model)` -- 
+* `page.observer` -- 
+    * API:
+        * Same as [EventMaster](http://ozjs.org/EventMaster/)
+    * Event:
+        * `{key}:new` -- 
+        * `{key}:update` --
+        * `{key}:delete` --
+        * `change` --
+
+### nerv.Collection
 
 ```javascript 
 var book = nerv([]);
@@ -81,9 +98,9 @@ var bookB = nerv.collection({
 });
 ```
 
-* `book.add(value|model)` -- 
-* same as above
-
+* `book.add(value)` -- 
+* `book.add(model)` -- 
+* Same as `nerv.Model`
 
 ## More References
 
