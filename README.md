@@ -1,9 +1,9 @@
 <!---
 layout: intro
-title: CordJS
+title: NervJS
 -->
 
-# CordJS
+# NervJS
 
 > * A tiny, pure, event-based model wrapper for the MVC or MDV (Model-driven Views) pattern.
 > * It is far thinner than Backbone. None of View, Controller or Router is involved.
@@ -14,21 +14,21 @@ title: CordJS
 ## In NodeJS
 
 ```
-npm install cord
+npm install nerv
 ```
 
 ## In browser
 
 ### AMD and OzJS
 
-* CordJS can either be viewed as an independent library, or as a part of [OzJS mirco-framework](http://ozjs.org/#framework).
+* NervJS can either be viewed as an independent library, or as a part of [OzJS mirco-framework](http://ozjs.org/#framework).
 * It's wrapped as an [AMD (Asynchronous Module Definition)](https://github.com/amdjs/amdjs-api/wiki/AMD) module. You should use it with [oz.js](http://ozjs.org/#start) (or require.js or [similar](http://wiki.commonjs.org/wiki/Implementations) for handling dependencies). 
 * If you want to make it available for both other AMD code and traditional code based on global namespace. OzJS provides [a mini define/require implementation](http://ozjs.org/examples/adapter/) to transform AMD module into traditional [module pattern](http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth).
 * See [http://ozjs.org](http://ozjs.org) for details.
 
 ### Get the code
 
-* [Download on Github](https://github.com/dexteryy/CordJS/blob/master/cord.js)
+* [Download on Github](https://github.com/dexteryy/NervJS/blob/master/nerv.js)
 * Add to your project as new dependency:
     * via [istatic](http://ozjs.org/istatic)
     * via [volo](https://github.com/volojs/volo)
@@ -42,17 +42,17 @@ npm install cord
 
 ## Examples
 
-* [demo](http://ozjs.org/CordJS/examples/)
+* [demo](http://ozjs.org/NervJS/examples/)
 
 ## API and usage
 
 ```javascript 
-var cord = require('cord');
-var papercover = cord();
-var hardcover = cord({
+var nerv = require('nerv');
+var papercover = nerv();
+var hardcover = nerv({
     isHard: true
 });
-var pageModel = cord.model({
+var pageModel = nerv.model({
     defaults: {
         text: '',
         number: 0
@@ -75,8 +75,8 @@ var page2 = pageModel({ number: 2 });
 * `page.find(value|model)` -- 
 
 ```javascript 
-var book = cord([]);
-var bookB = cord.collection({
+var book = nerv([]);
+var bookB = nerv.collection({
     selectPage: function(number){...}
 });
 ```

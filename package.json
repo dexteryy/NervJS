@@ -1,7 +1,7 @@
 {
-    "name": "CordJS",
+    "name": "nerv",
     "description": "A tiny, pure, event-based model wrapper for the MVC or MDV (Model-driven Views) pattern",
-    "homepage": "https://github.com/dexteryy/CordJS",
+    "homepage": "https://github.com/dexteryy/NervJS",
     "author": {
         "name": "dexteryy",
         "email": "dexter.yy@gmail.com",
@@ -9,7 +9,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git://github.com/dexteryy/CordJS.git"
+        "url": "git://github.com/dexteryy/NervJS.git"
     },
     "licenses": [{
         "type": "MIT",
@@ -18,14 +18,30 @@
     "keywords" : [
         "AMD",
         "oz",
-        "ozjs"
+        "ozjs",
+        "MVC",
+        "MDV"
     ],
-    "main": "cord",
+    "main": "nerv",
     "version": "0.2.0",
     "volo": {
         "dependencies": {
         }
     },
+    "engines": {
+        "node": ">=0.8.0"
+    },
+    "devDependencies": {
+        "grunt-shell": "~0.3.0",
+        "grunt-furnace": "~0.1.2",
+        "grunt-contrib-clean": "~0.4.0",
+        "grunt-contrib-copy": "~0.4.0",
+        "grunt-contrib-jshint": "~0.3.0",
+        "grunt": "~0.4.0"
+    },
+      "peerDependencies": {
+        "grunt": "~0.4.0"
+      },
     "dependencies": {
         "mo": "~1.5.2",
         "eventmaster": "2.1.0"
