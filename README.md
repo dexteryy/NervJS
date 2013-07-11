@@ -28,10 +28,12 @@ npm install nerv
 
 ### Get the code
 
-* [Download on Github](https://github.com/dexteryy/NervJS/blob/master/nerv.js)
-* Add to your project as new dependency:
-    * via [istatic](http://ozjs.org/istatic)
-    * via [volo](https://github.com/volojs/volo)
+Add to your project as new dependency
+
+* via [bower](http://bower.io/) - `bower install nerv`
+* via [istatic](http://ozjs.org/istatic)
+
+Or [download directly from Github](https://github.com/dexteryy/NervJS/blob/master/nerv.js)
 
 ## Dependencies
 
