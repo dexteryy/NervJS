@@ -1,7 +1,7 @@
 {
     "name": "nerv",
     "description": "A tiny, pure, event-based model wrapper for the MVC or MDV (Model-driven Views) pattern",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "main": "nerv.js",
     "dependencies": {
         "eventmaster": "~2.1.0",

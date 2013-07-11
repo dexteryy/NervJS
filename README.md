@@ -60,6 +60,7 @@ var hardcover = nerv({
     isHard: true
 });
 var pageModel = nerv.model({
+    init: function(){...},
     defaults: {
         text: '',
         number: 0
@@ -70,18 +71,21 @@ var page = pageModel({ number: 1 });
 var page2 = pageModel({ number: 2 });
 ```
 
-* `page.get()` -- 
+* `page.each(function(member){}, context)` -- 
 * `page.get(key)` -- 
+* `page.data()` -- 
+* `page.data(key)` -- 
 * `page.set(key, function(value){ }, context)` -- 
 * `page.set(key, function(model){ }, context)` -- 
 * `page.set(key, value, context)` -- 
 * `page.set(key, model, context)` -- 
-* `page.set(function(data){ }, context)` -- 
+* `page.set(function(agent){ }, context)` -- 
 * `page.set(model, context)` -- 
 * `page.remove(key)` -- 
 * `page.reset()` -- 
 * `page.find(value)` -- 
 * `page.find(model)` -- 
+* `page.setter(key, function(){})` -- 
 * `page.observer` -- 
     * API:
         * Same as [EventMaster](http://ozjs.org/EventMaster/)
@@ -102,6 +106,7 @@ var bookB = nerv.collection({
 
 * `book.add(value)` -- 
 * `book.add(model)` -- 
+* `book.size()` -- 
 * Same as `nerv.Model`
 
 ## More References

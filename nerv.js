@@ -24,6 +24,9 @@ define('nerv', [
         } else {
             this.reset();
         }
+        if (opt.init) {
+            opt.init.call(this);
+        }
     }
 
     Model.validate = function(v){
@@ -38,24 +41,36 @@ define('nerv', [
     Model.prototype = {
 
         init: function(opt){
-            this._data = this._getBase();
+            this._data = this._base();
             this._defaults = opt.defaults || {};
             this._setters = {};
-            this._getters = {};
             this.observer = event();
             return this;
         },
 
-        get: function(k){
-            var res;
-            if (k) {
-                res = this._getMember(k);
-                return res instanceof Model ? res.get() : res;
+        each: function(fn, context){
+            var data = this._data;
+            for (var k in data) {
+                if (fn.call(context, data[k], k) === false) {
+                    break;
+                }
             }
-            res = this._getBase();
-            this._each(function(v, k){
+        },
+
+        get: function(k){
+            return this._data[k];
+        },
+
+        data: function(k){
+            var res;
+            if (k !== undefined) {
+                res = this.get(k);
+                return res instanceof Model ? res.data() : res;
+            }
+            res = this._base();
+            this.each(function(v, k){
                 if (v instanceof Model) {
-                    res[k] = v.get();
+                    res[k] = v.data();
                 } else {
                     res[k] = v;
                 }
@@ -64,7 +79,7 @@ define('nerv', [
         },
 
         set: function(k, fn, context) {
-            if (!k) {
+            if (k === undefined) {
                 return this;
             }
             var new_data;
@@ -72,22 +87,25 @@ define('nerv', [
                 context = fn;
                 fn = k;
                 this._unwatchAll();
-                new_data = _.isFunction(fn)
-                    ? fn.call(context, this._data)
-                    : fn;
+                if (_.isFunction(fn)) {
+                    new_data = fn.call(context, this._data);
+                    this._data = _.copy(this._data);
+                } else {
+                    new_data = fn;
+                }
                 if (typeof new_data === 'object') {
                     this._setAll(new_data);
                 }
                 this._watchAll();
-                this.observer.fire('change');
+                this.observer.fire('change', [{ object: this }]);
                 return this;
             }
-            var old_data = this._getMember(k),
-                old_value = this.get(k);
+            var old_data = this.get(k),
+                old_value = this.data(k);
             this._unwatch(old_data, k);
             new_data = _.isFunction(fn) 
                 ? fn.call(context, old_data) 
-                : fn;
+                : (fn === undefined ? null : fn);
             if (this._setters[k]) {
                 new_data = this._setters[k].call(this._data, k, new_data);
             } else if (new_data !== undefined) {
@@ -100,28 +118,30 @@ define('nerv', [
             if (type) {
                 this._watch(new_data, k);
                 var changes = {
+                    object: this,
                     type: type,
                     name: k,
                     oldValue: old_value,
-                    newValue: this.get(k)
+                    newValue: this.data(k)
                 };
                 this.observer.fire(k + ':' + changes.type, [changes])
-                    .fire('change');
+                    .fire('change', [changes]);
             }
             return this;
         },
 
         remove: function(k){
-            var old_value = this.get(k);
-            this._unwatch(this._getMember(k), k);
-            this._removeMember(k);
+            var old_value = this.data(k);
+            this._unwatch(this.get(k), k);
+            this._remove(k);
             var changes = {
+                object: this,
                 type: 'delete',
                 name: k,
                 oldValue: old_value
             };
             this.observer.fire(k + ':' + changes.type, [changes])
-                .fire('change');
+                .fire('change', [changes]);
             return this;
         },
 
@@ -129,13 +149,13 @@ define('nerv', [
             this._unwatchAll();
             this._setAll();
             this._watchAll();
-            this.observer.fire('change');
+            this.observer.fire('change', [{ object: this }]);
             return this;
         },
 
         find: function(item){
             var res; 
-            this._each(function(v, k){
+            this.each(function(v, k){
                 if (v === item) {
                     res = k;
                     return false;
@@ -144,12 +164,16 @@ define('nerv', [
             return res;
         },
 
+        setter: function(k, fn) {
+            this._setters[k] = fn;
+        },
+
         _watchAll: function(){
-            this._each(this._watch, this);
+            this.each(this._watch, this);
         },
 
         _unwatchAll: function(){
-            this._each(this._unwatch, this);
+            this.each(this._unwatch, this);
         },
 
         _watch: function(v, k){
@@ -167,38 +191,15 @@ define('nerv', [
             }
         },
 
-        getter: function(k, fn) {
-            this._getters[k] = fn;
-        },
-
-        setter: function(k, fn) {
-            this._setters[k] = fn;
-        },
-
         _validate: function(){
-            this._each(Model.validate);
+            this.each(Model.validate);
         },
 
-        _each: function(fn, context){
-            var data = this._data;
-            for (var k in data) {
-                if (fn.call(context, data[k], k) === false) {
-                    break;
-                }
-            }
-        },
-
-        _getBase: function(){
+        _base: function(){
             return {};
         },
 
-        _getMember: function(k){
-            return this._getters[k] 
-                ? this._getters[k].call(this._data, k)
-                : this._data[k];
-        },
-
-        _removeMember: function(k){
+        _remove: function(k){
             delete this._data[k];
         },
 
@@ -216,7 +217,11 @@ define('nerv', [
             this.set(this._data.length, v);
         },
 
-        _each: function(fn, context){
+        size: function(){
+            return this._data.length;
+        },
+
+        each: function(fn, context){
             var data = this._data;
             for (var i = 0, l = data.length; i < l; i++) {
                 if (fn.call(context, data[i], i) === false) {
@@ -225,11 +230,11 @@ define('nerv', [
             }
         },
 
-        _getBase: function(){
+        _base: function(){
             return [];
         },
 
-        _removeMember: function(k){
+        _remove: function(k){
             this._data.splice(k, 1);
         },
 
@@ -259,30 +264,30 @@ define('nerv', [
 
         Collection: Collection,
 
-        model: function(opt){
-            var Sub = _.construct(exports.Model);
-            _.mix(Sub.prototype, opt);
-            function factory(data){
-                return new Sub({
-                    data: data,
-                    defaults: opt.defaults
-                });
-            }
-            factory.Class = Sub;
-            return factory;
-        },
-
-        collection: function(opt){
-            var Sub = _.construct(exports.Collection);
-            _.mix(Sub.prototype, opt);
-            function factory(data){
-                return new Sub({ data: data });
-            }
-            factory.Class = Sub;
-            return factory;
-        }
-
     });
+
+    exports.model = factory(exports.Model);
+
+    exports.collection = factory(exports.Collection);
+
+    function factory(ModelClass){
+        return function(cfg){
+            var Sub = _.construct(ModelClass);
+            var opt = {
+                init: cfg.init,
+                defaults: cfg.defaults
+            };
+            delete cfg.init;
+            delete cfg.defaults;
+            _.mix(Sub.prototype, cfg);
+            function wrapper(data){
+                opt.data = data;
+                return new Sub(opt);
+            }
+            wrapper.Class = Sub;
+            return wrapper;
+        };
+    }
 
     return exports;
 
